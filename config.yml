@@ -1,11 +1,11 @@
-baseURL: https://ramsayleung.github.io
+baseURL: https://ffffffff0.github.io
 title: "In Pursuit of Simplicity"
 pagination:
   pagerSize: 5
 theme: PaperMod
 
 author:
-  name: Ramsay Leung
+  name: Hua Li
 languageCode: en-us
 rssLimit: 10
 enableRobotsTXT: true
@@ -14,7 +14,7 @@ buildFuture: false
 buildExpired: false
 hasCJKLanguage: true # has chinese/japanese/korean ?
 
-googleAnalytics: "G-9MG65HQHEL"
+googleAnalytics: ""
 
 minify:
   disableXML: true
@@ -22,7 +22,7 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: "Ramsay's Blog"
+  title: "HuaLi's Blog"
   description: "In Pursuit of Hubris"
   keywords: [Blog, Software, Life, Enginering]
   author: Ramsay Leung
@@ -83,9 +83,9 @@ params:
   homeInfoParams:
     Title: "Hi there \U0001F44B"
     Content: >
-      There is Ramsay's personal blog, where he shares a bit of what he has learned along the way. \
+      There is HuaLi's personal blog, where he shares a bit of what he has learned along the way. \
 
-      _-- **Ramsay Leung**_
+      _-- **Hua Li**_
 
   analytics:
     google:
@@ -101,7 +101,7 @@ params:
     hiddenInSingle: true # hide on single page
 
   editPost:
-    URL: "https://github.com/ramsayleung/ramsayleung.github.io/blob/master/content"
+    URL: "https://github.com/ffffffff0/ffffffff0.github.io/tree/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 
@@ -118,15 +118,7 @@ params:
 
   socialIcons:
     - name: github
-      url: "https://github.com/ramsayleung"
-    - name: stackoverflow
-      url: "https://stackoverflow.com/users/5738112/ramsay"
-    - name: x
-      url: "https://twitter.com/foobar_ramsay"
-    - name: linkedin
-      url: "https://www.linkedin.com/in/ramsayleung/"
-    - name: telegram
-      url: "https://t.me/+Z2PUA7NFt41iY2M1"
+      url: "https://github.com/ffffffff0"
 defaultContentLanguageInSubdir: true
 copyright: "See this site's source code [here](https://github.com/ramsayleung/ramsayleung.github.io), licensed under GPLv3 ·"
 defaultContentLanguage: en
