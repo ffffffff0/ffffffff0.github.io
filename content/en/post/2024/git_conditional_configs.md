@@ -25,7 +25,7 @@ The above command will simply add the `user.name` and `user.email` value into yo
 [core]
     quotepath = false
 [init]
-    defaultBranch = master
+    defaultBranch = main
 ```
 
 You could also specify `--local` argument to writes the config values to `.git/config` in whatever project you're currently in. <br/>
