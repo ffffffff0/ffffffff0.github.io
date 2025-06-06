@@ -1,0 +1,6 @@
+[submodule "theme/even"]
+	path = theme/even
+	url = git@github.com:olOwOlo/hugo-theme-even.git
+[submodule "theme/PaperMod"]
+	path = theme/PaperMod
+	url = https://github.com/adityatelange/hugo-PaperMod.git
