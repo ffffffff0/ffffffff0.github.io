@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Book on 菠萝油与天光墟</title>
+    <link>https://ffffffff0.github.io/zh/tags/book/</link>
+    <description>Recent content in Book on 菠萝油与天光墟</description>
+    <image>
+      <title>菠萝油与天光墟</title>
+      <url>https://ffffffff0.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://ffffffff0.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- 0.146.7</generator>
+    <language>zh</language>
+    <copyright>See this site&amp;rsquo;s source code here, licensed under GPLv3 ·</copyright>
+    <lastBuildDate>Sat, 31 May 2025 17:04:23 -0700</lastBuildDate>
+    <atom:link href="https://ffffffff0.github.io/zh/tags/book/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>软件设计的哲学</title>
+      <link>https://ffffffff0.github.io/zh/post/2025/a_philosophy_of_software_design/</link>
+      <pubDate>Fri, 30 May 2025 00:39:00 -0700</pubDate>
+      <guid>https://ffffffff0.github.io/zh/post/2025/a_philosophy_of_software_design/</guid>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;&lt;span class=&#34;section-num&#34;&gt;1&lt;/span&gt; 前言&lt;/h2&gt;
+&lt;p&gt;知道这本书是因为在 Hacker News 上有人提问：&lt;a href=&#34;https://news.ycombinator.com/item?id=31713756&#34;&gt;你读过最好的技术书是什么&lt;/a&gt; &lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;?&lt;/p&gt;
+&lt;p&gt;最高赞的书是 Design Data Intensive Application(DDIA, 即《&lt;a href=&#34;https://book.douban.com/subject/30329536/&#34;&gt;数据密集型应用系统设计&lt;/a&gt;》&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;), 我觉得 DDIA 也担得起这个赞誉，然后最高赞的回答顺势提到了 &lt;a href=&#34;https://book.douban.com/subject/30218046/&#34;&gt;A Philosophy Of Software Design&lt;/a&gt; &lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;, 想来能与 DDIA 齐名的书，肯定不会差得哪里去。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h2 id="前言"><span class="section-num">1</span> 前言</h2>
+<p>知道这本书是因为在 Hacker News 上有人提问：<a href="https://news.ycombinator.com/item?id=31713756">你读过最好的技术书是什么</a> <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>?</p>
+<p>最高赞的书是 Design Data Intensive Application(DDIA, 即《<a href="https://book.douban.com/subject/30329536/">数据密集型应用系统设计</a>》<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>), 我觉得 DDIA 也担得起这个赞誉，然后最高赞的回答顺势提到了 <a href="https://book.douban.com/subject/30218046/">A Philosophy Of Software Design</a> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, 想来能与 DDIA 齐名的书，肯定不会差得哪里去。</p>
+<p>作者是 John Ousterhout, 斯坦福大学的教授，TCL 编程语言的创造者(Redis 的初始化版本就是用 TCL 写的)，共识算法 Raft 的作者之一.</p>
+<p>这本书并不厚，全书只有200多页，读起来也并不费劲。</p>
+<p>而这本书的主旨，开篇就点出来了:</p>
+<blockquote>
+<p>This book is about how to design software systems to minimize their complexity.</p>
+<p>本书讲述如何设计软件系统以最小化其复杂度</p></blockquote>
+<p>而软件工程的本质就是如何管理复杂度，全书围绕如何降低软件复杂性提出的思考和解决方案，
+主要围绕抽象，异常，文档，一致性，设计原则这五个方向。</p>
+<p>许多原则我看着都深有共鸣，尤其在设计过相当多的系统之后，犯过许多错误之后，才会意识到这些原则的重要之处。</p>
+<p>很多原则看上去说的和没说一样，但只有踩过坑，实践起来都知道是金科玉律, 除了道出「软件设计」的真谛之外, 这本书其他论点也可谓字字珠玑.</p>
+<p>关于谨慎暴露过多的配置给用户，尽量让程序动态计算各种参数值，尽量提供默认参数。</p>
+<blockquote>
+<p>开发软件时，开发者主动承担一些额外痛苦，从而减少用户的痛苦。</p>
+<p>When developing a module, look for opportunities to take a little bit of extra suffering upon yourself in order to reduce the suffering of your users.</p></blockquote>
+<p>关于接口设计的原则:</p>
+<blockquote>
+<p>模块拥有简单的接口比简单的实现更重要。</p>
+<p>it&rsquo;s more important for a module to have simple interface than a simple implementation</p></blockquote>
+<p>关于异常处理的洞见:</p>
+<blockquote>
+<p>解决问题的最好方式是避免出现问题。</p>
+<p>The best way to eliminate exception handling complexity is to define your APIs so that there are no exceptions to handle: <strong><strong>define errors out of existence</strong></strong></p>
+<p>归根结底，减少 Bug 的最佳方法是让软件更简单(少即是多)</p>
+<p><strong><strong>Overall, the best way to reduce bugs is to make software simpler.</strong></strong></p></blockquote>
+<h2 id="抽象"><span class="section-num">2</span> 抽象</h2>
+<p>所谓的抽象，用我自己的话来说的就是把复杂的东西简单地呈现出来。</p>
+<h3 id="模块深度"><span class="section-num">2.1</span> 模块深度</h3>
+<p>为了直观地感受一个模块设计是否足够抽象，作者提出一个模块深度的概念:</p>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-ff3dd" hidden>
+    <label for="zoomCheck-ff3dd">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/deep_module.jpg"/> 
+    
+    
+    </label>
+</figure>
+
+<p>矩形的表层长度即是接口的复杂程度，而矩形的面积代表模块实现的功能，好的模块应该是深的(deep), 这意味着它有简单的接口，但是内部有复杂且丰富的实现.</p>
+<p>例如 Unix 的文件读写接口:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">open</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">path</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">,</span> <span class="kt">mode_t</span> <span class="n">permissions</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">ssize_t</span> <span class="nf">read</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">buffer</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">count</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">ssize_t</span> <span class="nf">write</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">buffer</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">count</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">off_t</span> <span class="nf">lseek</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">off_t</span> <span class="n">offset</span><span class="p">,</span> <span class="kt">int</span> <span class="n">referencePosition</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">close</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接口非常简单，但是其内部的实现可能需要成千上万行的代码，
+需要支持文件目录的读写，文件权限，读写缓冲区，磁盘读写等等功能，这就是「深的」模块。</p>
+<p>与其相反的就是浅的模块(shallow), 接口很复杂，但是功能却很简单。</p>
+<h3 id="信息的漏与藏"><span class="section-num">2.2</span> 信息的漏与藏</h3>
+<p>实现抽象的关键手段就是辨别出信息的重要程度，对于不重要的信息，就要对用户隐藏起来，关键的信息，就要暴露给用户, 实现「去粗存精，开箱即用」。</p>
+<p>一个典型的例子就是参数配置，把参数暴露给用户，除非用户非常熟悉这个系统，不然他也不知道怎么算，
+不需要用户关注的参数就提供默认值，能程序动态计算就由程序自己来算.</p>
+<p>我很反感的一种设计就是引入一个配置系统，系统的运行参数都要由工程师配置，美其名是提供灵活度。</p>
+<p>但这不仅引入额外的系统依赖（须知复杂度的根源就来自依赖与不明确），还大大增加了的运维成本，
+更何况这样的配置还无法自适应，换种机型又要重新配置，导致配置越来越复杂。</p>
+<p>除非是业务的黑名单或者白名单，系统的运行参数能用默认的就用默认，能动态计算就动态计算。</p>
+<p>想想TCP/IP 的重试延迟时长如果不是动态计算，那么配置什么值比较合适，网络畅通和网络延迟又该是什么值，
+开始恢复时和开始堵塞时又应该是什么值的呢?</p>
+<h2 id="异常"><span class="section-num">3</span> 异常</h2>
+<p>异常处理是系统复杂度的关键来源之一，异常就是一种特殊的分支，系统为了处理特殊 case难免需要写很多额外的逻辑。</p>
+<p>而作者提出的降低异常处理来系统复杂度影响的方法，就是优化设计，减少必须处理异常的地方。</p>
+<p>解决一个问题最好的方法是避免其发生，听起来很空洞或者是很不可思议，作者举出来的例子就是 Java 的 <code>substring(int beginIndex, int endIndex)</code> 用于截取子字符串的接口, 如果 <code>endIndex</code> 超出字符长度，Java 就会抛出一个 <code>IndexOutOfBoundException</code>, 调用方就是需要考虑越界的问题。</p>
+<p>但是如果 Java 的 <code>substring</code> 接口本身可以像 Python 那样支持越界，返回一个空字符串，那么调用方就完全不需要考虑越界导致的异常</p>
+<p>另外一个例子是作者设计的TCL脚本中的 <code>unset</code> 指令，原意是用来删除一个变量，因为他最初的设想是变量如果不存在，用户不可能调用 <code>unset</code> 的，那么当 <code>unset</code> 操作的变量不存在，那么就会抛出异常。</p>
+<p>但是很多用户就是用 <code>unset</code> 来清理可能被初始化或者未初始化的变量，现在的设计就意味用户还需要包一层 <code>try/catch</code> 才能使用 <code>unset</code>.</p>
+<p>意识到这个设计错误之后，作者对 <code>unset</code> 的语义作了稍微的修正，用 <code>unset</code> 来确保指定的变量不再存在(如果变量本身不存在，那么它什么都不需要做)</p>
+<p>更经典的例子就是 Windows 下面删除一个文件，相信使用过 Windows 的朋友尝试删除文件时都会遇到这样的弹窗：「文件已被打开，无法删除，请重试」</p>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-bbb1b" hidden>
+    <label for="zoomCheck-bbb1b">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/windows_delete_opening_file.png"/> 
+    
+    
+    </label>
+</figure>
+
+<p>用户只能费尽心思去找打开这个文件的进程，然后把它杀掉再尝试删除，甚至只能通过关机重启来尝试删除文件。</p>
+<p>但是 Unix 的处理方式就更优雅，它允许用户删除已经被其他进程打开的文件，它会对该文件做标记，让用户看来它已经被删除了，但是在打开它的进程结束前文件对应的数据都会一直存在。</p>
+<p>只有在进程结束后，文件数据才会被删除掉，这样用户在删除文件时就不需要担心文件是否被使用。</p>
+<p>通过优化以上的设计，减少需要用户处理的异常，这也是一个「去粗留精」的过程, 减少用户需要感知的内容。</p>
+<h2 id="注释"><span class="section-num">4</span> 注释</h2>
+<p>本书用了好几个章节来介绍文档与注释的重要性，命名的重要性，如何写好注释和起好名字。</p>
+<p>好的文档可以大幅改善一个系统的设计，因为文档的作用就是把「对用户重要的，但是无法直接从代码中得知的关键信息告知用户」, 相当于帮用户把一个系统的关键信息给找出来。</p>
+<p>不是有这么一句话： <strong><strong>程序员都讨厌写文档，但是更痛恨其他程序员不写文档。</strong></strong></p>
+<p><strong><strong>而注释就是离源码最近的文档.</strong></strong></p>
+<p>程序员不写注释的借口大概有这么几个（可惜它们都是不成立的）, 常见的借口与它们不成立的原因可见:</p>
+<h3 id="好的代码是自解释的"><span class="section-num">4.1</span> 好的代码是自解释的</h3>
+<p>如果用户必须阅读方法源码才能使用它，那就没有抽象，你相当于把实现的所有复杂度都直接暴露给用户。</p>
+<p>若想通过抽象隐藏复杂性，注释必不可少</p>
+<h3 id="我没有时间写注释"><span class="section-num">4.2</span> 我没有时间写注释</h3>
+<p>如果你一直把写代码的优先级置于写注释之上，那么你会一直没有时间写注释，
+因为一个项目结束之后总会有新的项目到来，如果你一直把写注释的优先级放在代码之后，那么你永远都不会去写注释。</p>
+<p>写注释实际并不需要那么多的时间</p>
+<h3 id="注释都会过期的啦"><span class="section-num">4.3</span> 注释都会过期的啦</h3>
+<p>注释虽然难免会过期，但是保持与代码一致也并不会花费太多时间。</p>
+<p>只有大幅需要修改代码时才需要更新注释，更何况，只有每次都不更新注释，注释才会难免过期</p>
+<h3 id="我见过的注释都很烂-我为啥还要写"><span class="section-num">4.4</span> 我见过的注释都很烂，我为啥还要写</h3>
+<p>别人的注释写得不好，那不正说明你可以写出好的注释嘛。</p>
+<p>不能用别人的低标准来要求自己嘛。</p>
+<h3 id="注释的原则"><span class="section-num">4.5</span> 注释的原则</h3>
+<p>说起接口注释和文档，我一直觉得我描述下接口功能和使用场景，已经比绝大多数的同行做得好了。</p>
+<p>在和现在的 L7 大佬一起工作之后，着实被他的文档所震撼。</p>
+<p>不知道是因为其对代码质量和文档都有非常高的要求，还是读博士时训练出来的写作能力，
+其对接口的功能，使用场景以及异常的描述都非常详尽，甚至包括代码使用示例，质量与 JDK 源码的注释不相上下, 原来真的有程序员花这么多精力写代码注释的。</p>
+<h4 id="注释应当描述代码中不明显的内容"><span class="section-num">4.5.1</span> 注释应当描述代码中不明显的内容</h4>
+<p><strong><strong>注释应当描述代码中不明显的内容</strong></strong>,</p>
+<p>简单来说，就是要描述代码为什么要这么做，而不是描述代码是怎么做的，这相当于是把代码换成注释再写一次。</p>
+<h4 id="注释先行"><span class="section-num">4.5.2</span> 注释先行</h4>
+<p>很多程序员都习惯在写完代码之后才写注释，作者反其道而行， 作者推荐在定义完函数或者模块接口之后，不要马上动手写实现，
+而是在这个时候在接口上把接口注释写下来，这相当于是在脑海把模块的设计再过一次。</p>
+<p>写完代码再写注释，设计思路已经记不大清了，脑中更多的是实现细节，既容易把实现写成注释，又容易陷入「写完代码就不写注释」的陷阱。</p>
+<h2 id="一致性"><span class="section-num">5</span> 一致性</h2>
+<p>前文提到，系统的复杂度来自于两个方面「依赖」与「不明确」，
+而「一致性」就是让系统的行为更加清晰明确。</p>
+<p><strong><strong>它意味着相似的事情以相似的方式处理，不同的事情以不同的方式处理。</strong></strong></p>
+<p>即所谓的「规圆矩方」，通过规范约束降低随意性，以及「一法通，万法通」，统一模式提升可维护性，让行为可预期。</p>
+<p>一个系统的一致性一般体现在以下方面：</p>
+<ol>
+<li>命名(驼峰还是下划线)</li>
+<li>代码风格(缩进，空格还是tab)</li>
+<li>设计模式(使用特定的设计模式解决特定的问题)</li>
+</ol>
+<p>当然，还有通过「一致性」降低系统复杂度，走得比较极端的:</p>
+<p>之前还在微信支付的时候，除上述的要求外，还要求后端只能使用一种语言(C++, Golang/JavaScript就别想了), 存储组件只能使用微信内部研发的KV(使用MySql需要向总经理申请)等等的要求.</p>
+<h2 id="设计原则"><span class="section-num">6</span> 设计原则</h2>
+<h3 id="通用设计"><span class="section-num">6.1</span> 通用设计</h3>
+<p>好的设计应该是通用的，优先采用通用设计而非特殊场景的定制化方案，这个是减少复杂度和改善软件系统的根本原则。</p>
+<p>过度定制通常是成为软件复杂度增加的首要诱因。</p>
+<p>通用设计可以降低系统的整体复杂度(更少处理特殊分支的逻辑), 更深的模块(接口简单，功能丰富), 隐藏非关键信息.</p>
+<p>文中提到的例子就是文本编辑器的文字插入与删除操作:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 反例：过度定制（绑定特殊场景）, 实现删除键功能</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">class</span> <span class="nc">TextEditor</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleBackspaceKey</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// 耦合UI事件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cursorPosition</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">text</span><span class="p">.</span><span class="na">deleteCharAt</span><span class="p">(</span><span class="n">cursorPosition</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">cursorPosition</span><span class="o">--</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">// 正例：通用设计（解耦核心逻辑）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">class</span> <span class="nc">Text</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// 纯文本操作</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">content</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">class</span> <span class="nc">UI</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">onBackspacePressed</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">text</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="na">position</span><span class="p">(),</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">position</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// 调用通用API</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">cursor</span><span class="p">.</span><span class="na">moveLeft</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过 <code>delete(int start, int end)</code> 既可以实现删除键功能，也可以实现选中并删除的功能。</p>
+<h3 id="性能"><span class="section-num">6.2</span> 性能</h3>
+<p>在设计系统的时候，一般不需要太多地考虑性能的问题，因为简单，通用的系统要做性能优化通常都是比较容易；
+相反而言，深度定制的系统因为耦合了定义逻辑，要优化性能并没有那么容易。</p>
+<h3 id="设计两次"><span class="section-num">6.3</span> 设计两次</h3>
+<p>Design it twice</p>
+<p>因为很难一次就把事情做到极致, 那就再来一次, 设计时把能想到的选项都列下来.</p>
+<p>反直觉的是，第一直觉通常不是最优的, 所以不要只考虑一种设计方案，无论它看起来多么合理，多对比下其他方案总没有害处的。</p>
+<p>只用第一直觉的方案，其实你是在低估自己的潜力，你错失了找到更好方案的机会。</p>
+<p>这也是我在写设计方案时候的做法，把自己能想到的，和同事讨论出来的所有方案都写上，然后分析各种方案的优劣, 最好的方案可能并不在原有方案列表里面，而是其中几个方案的合体。</p>
+<h3 id="大局观"><span class="section-num">6.4</span> 大局观</h3>
+<p>做任何事都要有大局观, 编程也不例外，战略编程优于战术编程(Strategic Programming over Tactical Programming);</p>
+<p>虽然我们一直说「又不是不能跑」，但是我们对代码的要求，不能是「能跑就行啦」.</p>
+<p>再者就是要和扁鹊他大哥治病一样，把功夫都做在前期，防范于未然，修补错误成本往往也越往后越高，病入膏肓之后，扁鹊来了也要提桶跑路:</p>
+<blockquote>
+<p>治不了，等死吧，告辞</p></blockquote>
+<h2 id="代码整洁之道vs软件设计哲学"><span class="section-num">7</span> 代码整洁之道vs软件设计哲学</h2>
+<p>本书的作者对<a href="https://book.douban.com/subject/34986245/">《代码整洁之道》</a>(Clean Code)<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> 的作者(Robert C. Martin, 即 Uncle Bob)的诸多观点作了反驳</p>
+<h3 id="函数拆分"><span class="section-num">7.1</span> 函数拆分</h3>
+<p>比如关于什么时候应该拆分一个函数，Uncle Bob 的观点是，基于函数的代码行数，一个函数需要相当短，甚至10行都有太长了。</p>
+<p>Uncle Bob 原话:</p>
+<blockquote>
+<p>In the book Clean Code1, Robert Martin argues that functions should be broken up on length alone. He says that functions should be extremely short, and that even 10 lines is too long.</p></blockquote>
+<p>而本书作者 John 的观点是: <strong><strong>每个函数应只做一件事，并完整地做好</strong></strong></p>
+<p>函数的接口应当简洁，这样调用者无需记住大量信息就能正确使用它。</p>
+<p>函数应当具备深度：其接口应远比实现更简单。如果一个函数满足以上所有特性，那么它的长度通常并不重要。</p>
+<p><strong><strong>除非能让整个系统更简单，否则不应拆分函数</strong></strong></p>
+<h3 id="文档注释"><span class="section-num">7.2</span> 文档注释</h3>
+<p>Uncle Bob 认为需要给函数「注释始终是一种失败(<strong><strong>Comments are always failures</strong></strong>)」</p>
+<p>如果我们的编程语言足够富有表现力，或者如果我们有能力用好这些语言来传达意图，那么我们就不太需要注释——甚至可能完全不需要.</p>
+<p><strong><strong>注释的正确用途，是弥补我们无法用代码清晰表达的缺陷……注释始终是一种失败</strong></strong></p>
+<blockquote>
+<p>If our programming languages were expressive enough, or if we had the talent to subtly wield those languages to express our intent, we would not need comments very much — perhaps not at all.</p>
+<p>he proper use of comments is to compensate for our failure to express ourselves in code&hellip;. Comments are always failures.</p></blockquote>
+<p>而 John 的观点是</p>
+<p>但注释并非失败的表现。</p>
+<p><strong><strong>它们提供的信息与代码截然不同，而这些信息目前无法通过代码本身来表达。</strong></strong></p>
+<p><strong><strong>注释的作用之一，正是让人无需阅读代码即可理解其含义</strong></strong></p>
+<p>甚至直接反驳其观点:</p>
+<blockquote>
+<p>I worry that Martin’s philosophy encourages a bad attitude in programmers, where they avoid comments so as not to seem like failures.</p></blockquote>
+<h3 id="网上对线"><span class="section-num">7.3</span> 网上对线</h3>
+<p>所以也难怪 Uncle Bob 和 John Ousterhout 几个月前直接在网上论坛来了一次 <del>对线</del> (<a href="https://news.ycombinator.com/item?id=43166362">辩论)</a> <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></p>
+<p>然后有看热闹不嫌事大的播主，把两人邀请到直播上，让他们直接面对面再来了一次对线</p>
+<p>对应的Youtube视频: <a href="https://www.youtube.com/watch?v=3Vlk6hCWBw0">https://www.youtube.com/watch?v=3Vlk6hCWBw0</a></p>
+<p>两位的书我都看过，我个人的感觉是《代码整洁之道》更适合入门的工程师，它可以教你如何写出好的「代码片段」；
+而《软件设计的哲学》更适合需要做系统设计的工程师，它指导你如何设计好的「软件」。</p>
+<p>考虑到两位作者的背景和作品，我可以说两位的差别可以说是 <strong><strong>以编程为生的人与以写编程相关的东西为生的人</strong></strong></p>
+<h2 id="总结"><span class="section-num">8</span> 总结</h2>
+<p>全书读完，我觉得《软件设计的哲学》绝对是配得上最好的技术书籍之一的赞誉。</p>
+<p>但是不同的人读起来可能会有不同的感觉，其中的许多原则真的是做过设计，踩过坑才会有所共鸣, 否则会觉得其泛泛其谈。</p>
+<p>当然，我也不是完全同意书中的所有观点的。</p>
+<p>比如书中提到的会导致代码意图不「明显」的其中一种做法是声明的类型与初始化的类型不一致的情况:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span><span class="w"> </span><span class="n">incomingMessageList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">incomingMessageList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面声明的是 <code>List&lt;Message&gt;</code>, 实际使用的 <code>ArrayList&lt;Message&gt;</code>, 这可能会误导用户，因为意图不清晰，阅读代码的人可能不确定是否需要使用 <code>List</code> 或者 <code>ArrayList</code>, 最好是声明和初始化都换成相同的类型。</p>
+<p>但是 <code>List</code> 是接口, <code>ArrayList</code> 是接口的具体实现，这个就是非常标准的面向对象编程中的多态，这并不什么问题。</p>
+<p>但瑕不掩瑜，全书读完，把书盖上后，我有种齿颊留香, 余音绕梁的感觉，书里有很多「熟悉的味道」，总是让我想起经手过的项目中种种的好代码和「坏」代码.</p>
+<div class="qr-container" center>
+<img src="/ox-hugo/qrcode_gh_e06d750e626f_1.jpg" alt="qrcode_gh_e06d750e626f_1.jpg" class="qr-container" width="160px" height="160px" center="t" />
+公号同步更新，欢迎关注👻
+</div>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://news.ycombinator.com/item?id=31713756">https://news.ycombinator.com/item?id=31713756</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://book.douban.com/subject/30329536/">https://book.douban.com/subject/30329536/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://book.douban.com/subject/30218046/">https://book.douban.com/subject/30218046/</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://book.douban.com/subject/34986245/">https://book.douban.com/subject/34986245/</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://news.ycombinator.com/item?id=43166362">https://news.ycombinator.com/item?id=43166362</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>《过河卒》: 比特币雏形之父之父的故事</title>
+      <link>https://ffffffff0.github.io/zh/post/2025/%E8%BF%87%E6%B2%B3%E5%8D%92/</link>
+      <pubDate>Wed, 09 Apr 2025 23:08:00 -0700</pubDate>
+      <guid>https://ffffffff0.github.io/zh/post/2025/%E8%BF%87%E6%B2%B3%E5%8D%92/</guid>
+      <description>&lt;h2 id=&#34;缘起&#34;&gt;&lt;span class=&#34;section-num&#34;&gt;1&lt;/span&gt; 缘起&lt;/h2&gt;
+&lt;p&gt;在《软件那些事儿》播客采访听众故事的系列里面，有一期名为《&lt;a href=&#34;https://podcasts.apple.com/us/podcast/no-502-%E8%B7%9F35%E5%B2%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E8%81%8A%E8%81%8A%E6%AF%94%E7%89%B9%E5%B8%81/id1147186605?i=1000697534091&#34;&gt;No.502 跟35岁的程序员聊聊比特币&lt;/a&gt;》&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; 长达三个多小时的播客，主人公分享自己与比特币的故事，还谈到其在2020年卖房买比特币的故事。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h2 id="缘起"><span class="section-num">1</span> 缘起</h2>
+<p>在《软件那些事儿》播客采访听众故事的系列里面，有一期名为《<a href="https://podcasts.apple.com/us/podcast/no-502-%E8%B7%9F35%E5%B2%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E8%81%8A%E8%81%8A%E6%AF%94%E7%89%B9%E5%B8%81/id1147186605?i=1000697534091">No.502 跟35岁的程序员聊聊比特币</a>》<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> 长达三个多小时的播客，主人公分享自己与比特币的故事，还谈到其在2020年卖房买比特币的故事。</p>
+<p>既钦佩这位仁兄知行合一的投资理念，也羡慕他卖房买比特币的财力，胆识与机遇。</p>
+<p>这位同行在节目结束前分享了一本名为《过河卒》<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>的书籍，其作者戴习为是文革前就读于中国科技大学电子系的高材生。</p>
+<p>为什么他会在聊比特币故事的播客节目中提及这位书呢？</p>
+<p>因为比特币的作者中本聪的第一封<a href="https://www.bitcoin.com/satoshi-archive/emails/wei-dai/1/">已知公开的邮件</a><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>，即讨论比特币白皮书草稿的邮件，就是发给戴习为之子，<a href="http://www.weidai.com/">戴维</a> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>的:</p>
+<p>戴维的项目 <a href="http://www.weidai.com/bmoney.txt">b-money</a> <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>与比特币有诸多的相似之处，甚至可以称为比特币的雏形, 所以中本聪在白本书中引用了 b-money , 原文:</p>
+<blockquote>
+<p>I was very interested to read your b-money page.  I&rsquo;m getting ready to release a paper that expands on your ideas into a complete working system.</p></blockquote>
+<p>而戴维是著名的密码学专家，在大一的时候就写出了被诸多公司和开源项目使用的支持多种加密算法的C++加密库 <a href="https://cryptopp.com/">Cryptocpp</a> <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup></p>
+<p>虽然错过了买比特币的致富之路，但是多读点书，多学点知识终究是不会晚的，所以对《过河卒》这本书产生了浓厚的兴趣，不到一周就读完了。</p>
+<h2 id="太平洋两岸"><span class="section-num">2</span> 太平洋两岸</h2>
+<h3 id="年少时分"><span class="section-num">2.1</span> 年少时分</h3>
+<p>戴习为（下文称老戴）生于1947年，比共和国还要年长2岁，其祖父为武汉名医，
+父亲亦师承其父，学得一手好医术，又学过高能物理，还是少数能扣操流利英语和日语的人材，母亲为中学教师。</p>
+<p>老戴说起来是湖北人，但实际并没有在湖北生活过，满月不久就随父母迁居湖南长沙, 到1956年，老戴独自一人离开了父母，到北京投奔了奶奶。</p>
+<p>年少时的老戴对一切都充满好奇心，9岁的时候，他决定做一个属于自己的矿石收音机，
+费尽九牛二虎之力终于成功，当他在自制的收音机里面听到《杨家将》的评书时，心中那份得意就别提了。</p>
+<p>初中时候，老戴通过杂志，自制了一台有两个直流电子管的再生式便携式收音机，
+不久后他凭借同龄人中明显的技术优势考进了北海公园内的中国少年科技馆，拥有了帝王才可免费享用的北海公园。</p>
+<p>1964年，毛主席再次发出以阶级斗争为纲的路线指引，教育界在批判了1962年，1963年以「智育第一」的错误招生倾向后，
+提出了1964年的高考招生要优先选拔工人，贫下中农的子弟，教育要为无产阶级政治服务。</p>
+<p>而对那些非红五类家庭出身的考生而言，如果又不是党团员，
+那么他们只有表现得格外优秀才可能赢得本属于你的权利。</p>
+<p>而对于家境殷实的老戴家庭而言，虽然没有被打为「地主阶级」之类的黑五类，但也被毕业鉴定上写上了「学习目的不明确」的标语。</p>
+<p>但偏偏不信邪的老戴除了刻苦学习，还把目标放在了中国科技大学，因为班主任每次和他谈话结束都要加句：
+「像你这样的表现科技大学能收你吗？」，在当时，中科大专业设置和毕业后的去向对家庭出身的要求要比清华，北大更苛刻。</p>
+<p>发榜之后，他如愿考上了中国科技大学的电子系，1964年的中科大，含金量可见一斑。</p>
+<h3 id="大学时光"><span class="section-num">2.2</span> 大学时光</h3>
+<p>在中科大读了两年大学之后，阅读了各种书籍之后，文革爆发。</p>
+<p>在文革初期，红卫兵们流行「大串联」，即大中学生红卫兵组织或个人为主体，在全国范围内免费乘车，接待（食宿），
+互相串联，交流和宣传造反的活动。</p>
+<p>但老戴作为「逍遥派」，对政治活动并没有太多兴趣，他却利用了「大串联」的机会，游历起了祖国的大江南北：
+从北京到广州，从广州到杭州，再从杭州到上海。</p>
+<p>又尝试过「星火燎原」之行，从北京步行到上海。</p>
+<h3 id="走进社会"><span class="section-num">2.3</span> 走进社会</h3>
+<p>毕业之后，老戴和其同学兼女友被分配到商丘的军队参军两年，而后复业在商丘无线电厂参加了三年工作, 机缘巧合之下被调至中科院天文台，参加天文台的建设。</p>
+<p>后来，为了解决北京户口问题，老戴与妻子借调到了新组建的科学院空间科学技术中心，
+没想到困扰无数北漂的户口问题，在上世纪七十年代的时候，也同样困扰着像老戴之样的高材生。</p>
+<p>老戴在任期间，陪同妻子，完成了新部门「地面部」的搭建，并出色地完成密云遥感卫星地面接收站的选址与建设，至今仍发光发热。</p>
+<p>1977年，中国恢复了高考，1978年，中国恢复了研究生招考，1979年，第一批留学生选派出国。</p>
+<p>1981年，时年34岁，担任快视课题组组长的老戴决定出国，申请了东北大学应用数学系公派自费的博士，并「幸运」被录取。</p>
+<h3 id="留学美利坚"><span class="section-num">2.4</span> 留学美利坚</h3>
+<p>仅身揣20美元的老戴，在美国举目无亲的老戴，登上飞往美国的飞机。</p>
+<p>按照老戴的说法，像他这一拨在举国上下一穷二白的大旗下长大的一代，没钱的好处就是做任何决定时，钱的分量也不重。</p>
+<p>他在波士顿的第一晚，是在美国「派出所」的沙发上度过了，虽然东北大学减免了学费，但并未提供任何的生活费的。</p>
+<p>因此在「朋友的朋友的朋友」的介绍下，
+老戴在名为「杭州楼」的餐馆后来做起了包食住，无工资的工作，过上了白天上课读书，晚上工作帮厨的生活, 老戴称之为「洋插队」.</p>
+<p>34岁的老戴在东北大学攻读博士，先在应用数学系研究数学，后转向计算机系，研究并行计算，但历经4年都未有突破性进展，
+也未有影响力的论文发表，老戴陷入进退两难的局面。</p>
+<p>因此39岁的时候，老戴不想再等待了，于东北大学博士缀学, 重新步入社会，自个刨食。</p>
+<h3 id="创业种种"><span class="section-num">2.5</span> 创业种种</h3>
+<p>老戴先是与朋友合伙，为华人公司定制中文系统，却不料受朋友坑骗，公司破产，还牵涉到一桩官司；</p>
+<p>后来老戴与一名博士合并开发并行电脑，但历时一年未果，最后净身离开；后又与朋友合作于加拿大，结果不欢而散。</p>
+<p>鉴于种种与人合作的失败经历，老戴决定自己单干，开发模式识别系统，用于电脑识别手写的文字与语音，后被仅此于IBM的第二大电脑公司 DEC 赏识，重金招募至麾下。</p>
+<p>90年代，PC电脑风起云涌，日新月异，以Window + Intel 的Wintel 联盟强势崛起，以小型机为主的 DEC 不得不裁员应对，老戴也恰逢时分，离开 DEC，创立自己的 DTech 公司单干，专注手写文字与语音识别。</p>
+<p>而当时华尔街正吹起了「笔电脑」的风，使用「笔」作为输入设备的电脑，而识别输入文字自然成为「笔电脑」必不可少的功能，老戴的 DTech 凭借其技术优势，成为了「风口上的猪」，苹果，微软，IBM纷纷递来橄榄枝。</p>
+<p>最后，在比尔盖茨的亲自决策下，以「x位数」的价格收购了 DTech, 老戴也就顺势入职微软，成为总经理，后来领导了打赢IBM与苹果的笔电脑战役。</p>
+<p>虽然老戴未透露「x位数」的具体数额，但是相信肯定是超过千万美元级别，90年代的千万美元也足以一辈子生活富足无忧了。</p>
+<p>在1994年，比尔盖茨首次访华，老戴作为唯一的随员相随，陪同比尔盖茨会见了中国相关的领导人。</p>
+<h2 id="感悟"><span class="section-num">3</span> 感悟</h2>
+<h3 id="将相本无种-书成自有神"><span class="section-num">3.1</span> 将相本无种，书成自有神</h3>
+<p>读完老戴的同事，让我总是会想起之前读的一本书：<a href="https://ramsayleung.github.io/zh/post/2024/%E8%B5%B0%E5%87%BA%E6%88%88%E5%A3%81/">《走出戈壁》：从沙漠苦力到常青藤教授</a> <sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>, 作者从小学未毕业戈壁的苦力，一直努力到成为常青藤的教授，老戴也是类似的经历。</p>
+<p>虽然努力并不一定能成功，毕竟汗水，才华，运气都是成功不可或缺的因素，但是没有能力，机会即使飞到你面前，你也无法抓住。</p>
+<p>读完全书，令我印象深刻的是两件关于读书的事:</p>
+<p>1970年，在河南商丘无线电厂工作的老戴，工作之余，仍不忘学习，不断收集在那个时代与那个环境能够找到的新技术书籍，
+不久，一门新的技术「数字电路与计算机」开始吸引并迷住了老戴。</p>
+<p>作为一个学习过程，老戴争取机会，在一个与河南省的轻工技术研究所合作改造商丘市一个玻璃瓶厂的程序控制的工程中，
+担当了数字电子技术这一部分的技术骨干，并出色完成了这一项目。</p>
+<p>从此，老戴从一个学习模拟电子技术的工程师开始走进了数字时代。</p>
+<p>在1988年，老戴在并行公司创业失败离开时，他充满了苦涩，他开始怀疑自己，对自己的命运是否期许过高，他不断地问自己，
+或许他是那只在田地里不断掰玉米的狗熊? 是那只饶有兴致在水中捞着月亮的猴子?</p>
+<p>他想起自己在美国学了4年的数学，学习了并行计算机的理论与算法，他还想起了自己在1976年唐山大地震的时候，
+他还住在北京地震棚时，苦读过一番的《数字图像处理》，《傅里叶光学》与《模式识别理论》​。</p>
+<p>他决定凭借曾经苦读的知识，使用模式识别来识别手写文字与语音, 最终成就了 DTech 公司.</p>
+<p>「狐狸固然吃不到高架上的葡萄，但它可以在矮架上种上一棵」，来自「吃不了葡萄说葡萄酸」故事的启发。</p>
+<h3 id="家庭的影响"><span class="section-num">3.2</span> 家庭的影响</h3>
+<p>对于老戴的成功，其努力自然不容置喙, 但是我现在越发觉得个人的成就不仅和个人的努力及才华相关，还与其家庭息息相关，环境对个人成长太重要了。</p>
+<p>古人也是类似的看法，不然孟母又何必三迁呢。</p>
+<p>而作为被中本聪引用的论文作者戴维(下称小戴)，身为中国第一代程序员的父母对其影响不可谓不大。</p>
+<p>小戴80年代就能接触并学习编程，以至于在小学时期，就能帮一个台湾来美的研究生做数据结构的作业；</p>
+<p>初二时，小戴与大多数孩子一样，开始了暑假打工生涯，不同的是，在其他同龄人只能选择在社区送报纸，擦洗车之类的工作时。</p>
+<p>小戴跑到了妈妈正在工作的，一个为全球几大石油公司提供油井数据分析的石油软件公司当程序员。</p>
+<p>小戴用C语言写了一个子程序：</p>
+<p>将公司软件产品中正在使用的，因不同类的客户机器而使用的不同格式的浮点数据转换成IEEE规定的标准格式浮点数据，
+使本公司产品与其他公司产品的数据衔接更方便。</p>
+<p>高一时，小戴即被学生推荐到哈佛大学计算机系选修课程，并计入学分，被由中学（实际是州政府）支付学费，
+理论上，小戴可以在高中毕业的同时在哈佛大学毕业，类似国内的少年班。</p>
+<p>在高中毕业后，小戴非常轻松地被华盛顿州立大学的计算机系录取，华大的计算系可以在全美排前十的。</p>
+<p>小戴在大一的时候，用 C++ 实现了一个涵盖已公开发表过的主要加密与解密算法的软件库，
+成为北美第一个被全民共享，而已至今仍被全世界（包括中国）广泛使用的加解密算法库。</p>
+<p>读过计算机专业的同学应该听过一句名言：不要实现你自己的加解密算法库（和共识算法库），因为非常难实现正确，一旦出问题后果又非常严重。</p>
+<p>所以小戴的水平可想而知。</p>
+<h3 id="大厂感悟"><span class="section-num">3.3</span> 大厂感悟</h3>
+<p>书中还有不少篇幅是描写在微软的工作体验，这让我这个从毕业起就在国内外大厂后辈非常有感悟，其实都是一样的。</p>
+<p>微软有着非常好的员工福利，有着委托给星级酒店的食堂，弹性的上下班时间，
+有非常优美的园区，非常自由和充满活力的文化氛围。</p>
+<p>除不考勤上下班时间之外，公司还从早10点到下午2点，每一小时一趟的班车，在园区内与园区边设备豪华的健身俱乐部间穿梭。</p>
+<p>公司支付健身的一切费用，员工可游泳，或网球……，活动筋骨，锻炼身体;一年四季，或小组，或大组，或整个公司，三日一小宴，五日一大宴。</p>
+<p>美食美酒，Party不断; 新上影的电影、热门棒球赛、NBA篮球赛、橄榄球大赛、歌星演唱会，公司赠票给员工全家，请你务必赏光。</p>
+<p>一年三百六十五天，公司开满了各式各样的进修课程，鼓励诸位踊跃参加。</p>
+<p>如诸位能大体上不影响日常工作，而学校又肯收你，读博士、读硕士，公司均乐于为你支付学费。</p>
+<p>听起来真是神仙过的日子。</p>
+<p>甚至过年的时候包下了几百英亩的地方来搞年会，把加拿大马术队，奥林匹克跳伞队也请过来表演。</p>
+<p>但是公司终究不是疗养院，公司更不可能养大爷，任务已经明确了，只是为了让工程师们能赶上 milestone (也就是 deadline)</p>
+<p>好酒好饭无非是让你上阵时精力充沛、生龙活虎罢了。就如同那第一流的奶牛场，请你听音乐，给你做按摩，为的是请你多出牛奶。</p>
+<p>更何况，羊毛出自羊身上，微软给的薪资只有同期硅谷同行的一半略多，直到现在也是如此，也难怪人送外号「花生厂」(薪水相对较低的戏称).</p>
+<p>而弹性上下班，就可以加班不给加班费了。</p>
+<p>更何况，现在不流行给奶牛弹音乐，做按摩来多产奶了，现在流行用鞭子抽奶牛，还威胁奶牛，不多产奶就以绩效差把你开了，让你自生自灭。</p>
+<p>对于 milestone, 弹性加班之类的「资本主义把戏」，我是再熟悉不过了。</p>
+<p>我在<a href="https://ramsayleung.github.io/zh/post/2023/%E4%BB%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E7%A6%BB%E7%BA%BF_%E6%88%91%E5%B8%A6%E8%B5%B0%E4%BA%86%E4%BB%80%E4%B9%88/">微信支付</a> <sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>的时候，微信支付推行的是所谓的「精益迭代」研发模式，
+大意每两周作为一个周期，把任务拆分到能两周内完成的颗粒度，
+在第二周的周五进行「复盘」，由领导（或是经理，或是总监）开会对着需求单与工程师逐个核对进度。</p>
+<p>也就意味着每两周就有一次 deadline, 完成这两周的任务并不能影响下一个两周的任务的轮转，迭代总是周而复始，直到你被滚动的车轮碾碎。</p>
+<p>任务太大怎么办，总能拆小的，两周总要交付什么东西的。</p>
+<p>没有完成怎么办？不用担心，你总可以想办法完成的, 不然要怎么向领导交待呢, 这些都是数据和指标。</p>
+<p>这样洗礼了三年后，现在无论多少任务，都有种羽扇纶巾，谈笑间，需求灰飞烟灭的淡定从容了。</p>
+<h3 id="better-than-before"><span class="section-num">3.4</span> Better than before</h3>
+<p>老戴通过自己的经历告诉我们:</p>
+<p>无论是白人，黑人，黄种人，无论在农村还是城市，也无论是出生在穷家还是富户，追求成功的人们，只要你努力，只要你执着，做得到的。</p>
+<p>社会对成功的定义往往固化,「出将入相」「成名成家」「腰缠万贯」，但「将相本无种」，真正的成功，是超越昨天的自己。</p>
+<p>过好每一个今天，就是通往成功的路。 立足当下，辨明方向，踮起脚尖，哪怕只比昨天前进一寸。</p>
+<p>这或许像「鸡汤」，但真理往往朴素，从翻开一本书、迈出第一步开始，让身体或思想始终在路上。</p>
+<p>秉持「Better than before」的信念，「卒子」一步步向前，直到跨过那条「河」，化身为「车」.</p>
+<p>如卒过河，日拱一卒，终有一日，平凡亦可蜕变为非凡。</p>
+<h2 id="推荐阅读">推荐阅读</h2>
+<ul>
+<li>旅加经历
+<ul>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E8%BF%99%E4%BA%9B%E5%B9%B4%E8%B5%B0%E8%BF%87%E7%9A%84%E8%B7%AF_%E4%BB%8E%E5%B9%BF%E5%B7%9E%E5%88%B0%E6%B8%A9%E5%93%A5%E5%8D%8E/">这些年走过的路：从广州到温哥华</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E5%8A%A0%E6%8B%BF%E5%A4%A7%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/">加拿大之初体验</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2024/%E7%99%BB%E9%99%86%E5%8A%A0%E6%8B%BF%E5%A4%A7%E4%B8%80%E5%B9%B4%E7%9A%84%E4%BD%93%E4%BC%9A/">登陆加拿大一年后的体会</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2024/%E5%A4%8F%E6%97%A5%E6%8D%95%E8%9F%B9%E8%AE%B0/">夏日捕蟹记</a></li>
+</ul>
+</li>
+<li>历史思考
+<ul>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E7%BD%AE%E8%BA%AB%E4%BA%8B%E5%86%85/">为什么梦想买不起，故乡回不去</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E9%97%B2%E8%81%8A%E5%86%99%E4%BD%9C/">闲聊写作的好处</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2024/%E9%87%91%E6%A6%9C%E9%A2%98%E5%90%8D%E4%B9%8B%E5%90%8E/">金榜题名之后</a></li>
+</ul>
+</li>
+<li>工具流分享
+<ul>
+<li><a href="https://ramsayleung.github.io/zh/post/2024/%E7%AE%80%E6%98%8E%E5%86%99%E4%BD%9C%E6%8C%87%E5%8D%97/">简明写作指南</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E6%88%91%E7%9A%84%E5%86%99%E4%BD%9C%E6%B5%81/">我的写作流</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E6%88%91%E7%9A%84%E7%94%BB%E5%9B%BE%E6%B5%81/">我的画图流：画图工具与技巧分享</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E6%88%91%E7%9A%84%E6%90%9C%E7%B4%A2%E6%B5%81/">我的搜索流：高效搜索经验分享</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2022/feynman_technique/">最好的学习方式：费曼学习法(Feynman Technique)</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2021/%E7%B3%BB%E7%BB%9F%E6%80%9D%E8%80%83/">系统思考：既见树木，又见森林</a></li>
+</ul>
+</li>
+<li>职场思考
+<ul>
+<li><a href="https://ramsayleung.github.io/zh/post/2024/%E7%BC%96%E7%A8%8B%E5%8D%81%E5%B9%B4%E7%9A%84%E6%84%9F%E6%82%9F/">编程十年的感悟</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2023/%E4%BB%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E7%A6%BB%E7%BA%BF_%E6%88%91%E5%B8%A6%E8%B5%B0%E4%BA%86%E4%BB%80%E4%B9%88/">那些年，我从微信支付学到的东西</a></li>
+<li><a href="https://ramsayleung.github.io/zh/post/2025/%E6%9D%82%E8%B0%88ai%E5%8F%96%E4%BB%A3%E7%A8%8B%E5%BA%8F%E5%91%98/">杂谈AI取代程序员</a></li>
+</ul>
+</li>
+</ul>
+<div center class="qr-container">
+<img src="/ox-hugo/qrcode_gh_e06d750e626f_1.jpg" alt="qrcode_gh_e06d750e626f_1.jpg" width="160px" height="160px" center="t" class="qr-container" />
+公号同步更新，欢迎关注👻
+</div>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://podcasts.apple.com/us/podcast/no-502-%E8%B7%9F35%E5%B2%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E8%81%8A%E8%81%8A%E6%AF%94%E7%89%B9%E5%B8%81/id1147186605?i=1000697534091">https://podcasts.apple.com/us/podcast/no-502-%E8%B7%9F35%E5%B2%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E8%81%8A%E8%81%8A%E6%AF%94%E7%89%B9%E5%B8%81/id1147186605?i=1000697534091</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://book.douban.com/subject/1106247/">https://book.douban.com/subject/1106247/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://www.bitcoin.com/satoshi-archive/emails/wei-dai/1/">https://www.bitcoin.com/satoshi-archive/emails/wei-dai/1/</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="http://www.weidai.com/">http://www.weidai.com/</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="http://www.weidai.com/bmoney.txt">http://www.weidai.com/bmoney.txt</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="https://cryptopp.com/">https://cryptopp.com/</a>&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p><a href="https://ramsayleung.github.io/zh/post/2024/%E8%B5%B0%E5%87%BA%E6%88%88%E5%A3%81/">https://ramsayleung.github.io/zh/post/2024/%E8%B5%B0%E5%87%BA%E6%88%88%E5%A3%81/</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8">
+<p><a href="https://ramsayleung.github.io/zh/post/2023/%E4%BB%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E7%A6%BB%E7%BA%BF_%E6%88%91%E5%B8%A6%E8%B5%B0%E4%BA%86%E4%BB%80%E4%B9%88/">https://ramsayleung.github.io/zh/post/2023/%E4%BB%8E%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E7%A6%BB%E7%BA%BF_%E6%88%91%E5%B8%A6%E8%B5%B0%E4%BA%86%E4%BB%80%E4%B9%88/</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
