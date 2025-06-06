@@ -34,7 +34,7 @@ params:
 
   ShowFullTextInRSS: true
   ShowReadingTime: true
-  ShowShareButtons: true
+  ShowShareButtons: false
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
   hideAuthor: true
