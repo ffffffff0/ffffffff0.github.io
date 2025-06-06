@@ -7,4 +7,4 @@ toc = true
 +++
 
 ## <span class="section-num">0x0</span> 自我认知 {#自我认知}
-一个努力但平凡的人，希望做个有趣的人, work hard and be nice to people. 
+to do
