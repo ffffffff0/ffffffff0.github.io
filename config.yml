@@ -14,7 +14,7 @@ buildFuture: false
 buildExpired: false
 hasCJKLanguage: true # has chinese/japanese/korean ?
 
-googleAnalytics: ""
+googleAnalytics: "G-1J8B7BED4Q"
 
 minify:
   disableXML: true
