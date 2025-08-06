@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on 李华的博客</title>
-    <link>https://ffffffff0.github.io/zh/post/</link>
-    <description>Recent content in Posts on 李华的博客</description>
+    <title>Reading on 李华的博客</title>
+    <link>https://ffffffff0.github.io/zh/tags/reading/</link>
+    <description>Recent content in Reading on 李华的博客</description>
     <image>
       <title>李华的博客</title>
       <url>https://ffffffff0.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
@@ -13,7 +13,7 @@
     <language>zh</language>
     <copyright>See this site&amp;rsquo;s source code here, licensed under GPLv3 ·</copyright>
     <lastBuildDate>Sat, 05 Jul 2025 00:55:47 -0700</lastBuildDate>
-    <atom:link href="https://ffffffff0.github.io/zh/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ffffffff0.github.io/zh/tags/reading/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>福格行为模型</title>
       <link>https://ffffffff0.github.io/zh/post/2025/%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%9E%8B/</link>
