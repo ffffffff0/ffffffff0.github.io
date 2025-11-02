@@ -307,75 +307,21 @@
   </tbody>
 </table>
 <h4 id="索引创建流程">索引创建流程</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sequenceDiagram
-</span></span><span class="line"><span class="cl">    participant U as 用户
-</span></span><span class="line"><span class="cl">    participant API as API Server
-</span></span><span class="line"><span class="cl">    participant IM as Index Manager
-</span></span><span class="line"><span class="cl">    participant DB as PostgreSQL
-</span></span><span class="line"><span class="cl">    participant R as Reconciler
-</span></span><span class="line"><span class="cl">    participant W as Celery Worker
-</span></span><span class="line"><span class="cl">    participant S as 存储层
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    U-&gt;&gt;API: 上传文档
-</span></span><span class="line"><span class="cl">    API-&gt;&gt;IM: create_indexes()
-</span></span><span class="line"><span class="cl">    IM-&gt;&gt;DB: 写入 DocumentIndex&lt;br/&gt;status=PENDING, version=1
-</span></span><span class="line"><span class="cl">    IM--&gt;&gt;API: 返回成功
-</span></span><span class="line"><span class="cl">    API--&gt;&gt;U: 上传成功
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    Note over R: 每 30 秒执行一次
-</span></span><span class="line"><span class="cl">    R-&gt;&gt;DB: 查询 PENDING 状态索引
-</span></span><span class="line"><span class="cl">    DB--&gt;&gt;R: 返回待处理列表
-</span></span><span class="line"><span class="cl">    R-&gt;&gt;W: 调度 create_document_indexes_workflow
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    W-&gt;&gt;W: parse_document_task&lt;br/&gt;解析文档内容
-</span></span><span class="line"><span class="cl">    W-&gt;&gt;W: trigger_create_indexes_workflow&lt;br/&gt;动态扇出
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    par 并行索引创建
-</span></span><span class="line"><span class="cl">        W-&gt;&gt;S: create_index(VECTOR)&lt;br/&gt;生成 embedding
-</span></span><span class="line"><span class="cl">        W-&gt;&gt;S: create_index(FULLTEXT)&lt;br/&gt;建立全文索引
-</span></span><span class="line"><span class="cl">        W-&gt;&gt;S: create_index(GRAPH)&lt;br/&gt;构建知识图谱
-</span></span><span class="line"><span class="cl">    end
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    W-&gt;&gt;DB: 更新 status=ACTIVE&lt;br/&gt;observed_version=1
-</span></span><span class="line"><span class="cl">    W--&gt;&gt;R: 任务完成
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h5 id="向量索引构建">向量索引构建</h5>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-1c1b3" hidden>
+    <label for="zoomCheck-1c1b3">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/create_index.png"/> 
+    
+    
+    </label>
+</figure>
+
+<h5 id="向量索引构建">向量索引构建</h5>
 <p>对不同的chunk 使用 embedding 模型生成 vector，保存在向量数据库中。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -643,167 +589,21 @@
 <p>通过 openapi: /api/v1/collections/{collection_id}/graphs/merge-suggestions/{suggestion_id}/action 进行merge 相同的实体。</p>
 </li>
 </ul>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
-</span><span class="lnt">50
-</span><span class="lnt">51
-</span><span class="lnt">52
-</span><span class="lnt">53
-</span><span class="lnt">54
-</span><span class="lnt">55
-</span><span class="lnt">56
-</span><span class="lnt">57
-</span><span class="lnt">58
-</span><span class="lnt">59
-</span><span class="lnt">60
-</span><span class="lnt">61
-</span><span class="lnt">62
-</span><span class="lnt">63
-</span><span class="lnt">64
-</span><span class="lnt">65
-</span><span class="lnt">66
-</span><span class="lnt">67
-</span><span class="lnt">68
-</span><span class="lnt">69
-</span><span class="lnt">70
-</span><span class="lnt">71
-</span><span class="lnt">72
-</span><span class="lnt">73
-</span><span class="lnt">74
-</span><span class="lnt">75
-</span><span class="lnt">76
-</span><span class="lnt">77
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">flowchart TD
-</span></span><span class="line"><span class="cl">    %% 定义样式类
-</span></span><span class="line"><span class="cl">    classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000,font-weight:bold
-</span></span><span class="line"><span class="cl">    classDef manager fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
-</span></span><span class="line"><span class="cl">    classDef processing fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
-</span></span><span class="line"><span class="cl">    classDef intelligence fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-</span></span><span class="line"><span class="cl">    classDef optimization fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
-</span></span><span class="line"><span class="cl">    classDef storage fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
-</span></span><span class="line"><span class="cl">    classDef complete fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#000,font-weight:bold
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 入口层
-</span></span><span class="line"><span class="cl">    START[&#34;🚀 Graph Index 任务启动&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 管理层
-</span></span><span class="line"><span class="cl">    MANAGER[&#34;🎯 LightRAG 实例管理&lt;br/&gt;• create_lightrag_instance&lt;br/&gt;• workspace 隔离&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 文档处理分支
-</span></span><span class="line"><span class="cl">    DOC_PROCESS[&#34;📄 文档分块处理&lt;br/&gt;• ainsert_and_chunk_document&lt;br/&gt;• chunking_by_token_size&#34;]
-</span></span><span class="line"><span class="cl">    DOC_STORE[&#34;💾 分块数据存储&lt;br/&gt;• chunks_vdb.upsert&lt;br/&gt;• text_chunks.upsert&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 图索引处理分支
-</span></span><span class="line"><span class="cl">    GRAPH_START[&#34;🏛️ 图索引构建启动&lt;br/&gt;• aprocess_graph_indexing&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 智能提取层
-</span></span><span class="line"><span class="cl">    AI_EXTRACT[&#34;🔬 AI 智能提取&lt;br/&gt;• extract_entities&lt;br/&gt;• LLM 并发调用&#34;]
-</span></span><span class="line"><span class="cl">    ENTITY_REL[&#34;🎭 实体关系识别&lt;br/&gt;• Entity Recognition&lt;br/&gt;• Relationship Extraction&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 拓扑优化层
-</span></span><span class="line"><span class="cl">    TOPO_ANALYSIS[&#34;🧠 拓扑分析&lt;br/&gt;• _find_connected_components&lt;br/&gt;• BFS算法&#34;]
-</span></span><span class="line"><span class="cl">    COMPONENT_GROUP[&#34;🌐 连通分量分组&lt;br/&gt;• Component Grouping&lt;br/&gt;• 并发任务分配&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 并发合并层
-</span></span><span class="line"><span class="cl">    CONCURRENT_MERGE[&#34;⚡ 并发智能合并&lt;br/&gt;• merge_nodes_and_edges&lt;br/&gt;• 细粒度锁控制&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 存储层（并行写入）
-</span></span><span class="line"><span class="cl">    STORAGE_GRAPH[&#34;🗄️ 图数据库&lt;br/&gt;Neo4j/NebulaGraph/PG&#34;]
-</span></span><span class="line"><span class="cl">    STORAGE_VECTOR[&#34;🎯 向量数据库&lt;br/&gt;Qdrant/Elasticsearch&#34;]
-</span></span><span class="line"><span class="cl">    STORAGE_TEXT[&#34;📝 文本存储&lt;br/&gt;原始分块数据&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 完成
-</span></span><span class="line"><span class="cl">    COMPLETE[&#34;✅ 知识图谱构建完成&lt;br/&gt;🎉 多维度检索就绪&#34;]
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 主流程连接
-</span></span><span class="line"><span class="cl">    START --&gt; MANAGER
-</span></span><span class="line"><span class="cl">    MANAGER --&gt; DOC_PROCESS
-</span></span><span class="line"><span class="cl">    MANAGER --&gt; GRAPH_START
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    DOC_PROCESS --&gt; DOC_STORE
-</span></span><span class="line"><span class="cl">    DOC_STORE -.-&gt;|&#34;数据准备完成&#34;| GRAPH_START
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    GRAPH_START --&gt; AI_EXTRACT
-</span></span><span class="line"><span class="cl">    AI_EXTRACT --&gt; ENTITY_REL
-</span></span><span class="line"><span class="cl">    AI_EXTRACT --&gt; TOPO_ANALYSIS
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    ENTITY_REL --&gt; COMPONENT_GROUP
-</span></span><span class="line"><span class="cl">    TOPO_ANALYSIS --&gt; COMPONENT_GROUP
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    COMPONENT_GROUP --&gt; CONCURRENT_MERGE
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 并行存储
-</span></span><span class="line"><span class="cl">    CONCURRENT_MERGE --&gt; STORAGE_GRAPH
-</span></span><span class="line"><span class="cl">    CONCURRENT_MERGE --&gt; STORAGE_VECTOR
-</span></span><span class="line"><span class="cl">    DOC_STORE --&gt; STORAGE_TEXT
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 汇聚完成
-</span></span><span class="line"><span class="cl">    STORAGE_GRAPH --&gt; COMPLETE
-</span></span><span class="line"><span class="cl">    STORAGE_VECTOR --&gt; COMPLETE
-</span></span><span class="line"><span class="cl">    STORAGE_TEXT --&gt; COMPLETE
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    %% 应用样式
-</span></span><span class="line"><span class="cl">    class START entry
-</span></span><span class="line"><span class="cl">    class MANAGER manager
-</span></span><span class="line"><span class="cl">    class DOC_PROCESS,DOC_STORE processing
-</span></span><span class="line"><span class="cl">    class GRAPH_START,AI_EXTRACT,ENTITY_REL intelligence
-</span></span><span class="line"><span class="cl">    class TOPO_ANALYSIS,COMPONENT_GROUP,CONCURRENT_MERGE optimization
-</span></span><span class="line"><span class="cl">    class STORAGE_GRAPH,STORAGE_VECTOR,STORAGE_TEXT storage
-</span></span><span class="line"><span class="cl">    class COMPLETE complete
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h5 id="视觉索引构建">视觉索引构建</h5>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-398b0" hidden>
+    <label for="zoomCheck-398b0">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/graphrag.png"/> 
+    
+    
+    </label>
+</figure>
+
+<h5 id="视觉索引构建">视觉索引构建</h5>
 <p>会使用多模态模型，有两条路径，根据模型的能力，会有两条路径.</p>
 <ol>
 <li>对图像进行  存储在向量数据库中。</li>
@@ -1104,61 +904,21 @@
 </div><ol start="3">
 <li>MCP server 通过api 检索相关信息，后续经过 query prompt 来处理检索返回的信息。</li>
 </ol>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sequenceDiagram
-</span></span><span class="line"><span class="cl">    participant U as 用户
-</span></span><span class="line"><span class="cl">    participant API as API Server
-</span></span><span class="line"><span class="cl">    participant Agent as Agent Service
-</span></span><span class="line"><span class="cl">    participant MCP as MCP Tools
-</span></span><span class="line"><span class="cl">    participant LLM as LLM Service
-</span></span><span class="line"><span class="cl">    participant Search as Search Service
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    U-&gt;&gt;API: 发送消息
-</span></span><span class="line"><span class="cl">    API-&gt;&gt;Agent: process_message()
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    Agent-&gt;&gt;LLM: 调用 LLM（携带工具定义）
-</span></span><span class="line"><span class="cl">    LLM--&gt;&gt;Agent: 返回工具调用指令
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    Agent-&gt;&gt;MCP: 执行工具&lt;br/&gt;search_collection()
-</span></span><span class="line"><span class="cl">    MCP-&gt;&gt;Search: 混合检索
-</span></span><span class="line"><span class="cl">    Search--&gt;&gt;MCP: 返回检索结果
-</span></span><span class="line"><span class="cl">    MCP--&gt;&gt;Agent: 返回工具结果
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    Agent-&gt;&gt;LLM: 携带检索上下文&lt;br/&gt;再次调用 LLM
-</span></span><span class="line"><span class="cl">    LLM--&gt;&gt;Agent: 生成最终回答
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    Agent--&gt;&gt;API: 流式返回
-</span></span><span class="line"><span class="cl">    API--&gt;&gt;U: SSE 流式响应
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h4 id="检索中-mcp-agent-的使用">检索中 mcp-agent 的使用</h4>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-a4d32" hidden>
+    <label for="zoomCheck-a4d32">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/mcp.png"/> 
+    
+    
+    </label>
+</figure>
+
+<h4 id="检索中-mcp-agent-的使用">检索中 mcp-agent 的使用</h4>
 <p>Agent 系统的基本构建块是一个通过来自 MCP 服务器集合的检索、工具和内存等增强功能提升的 LLM。当前的模型可以主动使用这些能力——生成自己的搜索查询、选择合适的工具并确定要保留的信息。</p>
 <ol>
 <li>MCP server 的初始化, 设置对应的 server name: aperag.</li>
@@ -1349,57 +1109,21 @@
 <p>内部的generate 结果的迭代过程。</p>
 </li>
 </ol>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">flowchart</span> <span class="n">TD</span>
-</span></span><span class="line"><span class="cl">    <span class="n">B</span><span class="p">[</span><span class="err">设置系统提示</span><span class="p">]</span> <span class="o">--&gt;</span> <span class="n">C</span><span class="p">[</span><span class="err">获取可用工具</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">C</span> <span class="o">--&gt;</span> <span class="n">E</span><span class="p">[</span><span class="err">开始循环</span><span class="o">&lt;</span><span class="n">br</span><span class="o">&gt;</span><span class="n">max_iterations</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="n">E</span> <span class="o">--&gt;</span> <span class="n">G</span><span class="p">[</span><span class="err">调用</span><span class="n">OpenAI</span> <span class="n">API</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">G</span> <span class="o">--&gt;</span> <span class="n">J</span><span class="p">[</span><span class="err">提取响应消息</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="n">J</span> <span class="o">--&gt;</span> <span class="n">K</span><span class="p">{</span><span class="n">finish_reason</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">K</span> <span class="o">--&gt;|</span><span class="n">tool_calls</span><span class="o">|</span> <span class="n">L</span><span class="p">[</span><span class="err">并行执行工具调用</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">K</span> <span class="o">--&gt;|</span><span class="n">length</span><span class="o">|</span> <span class="n">M</span><span class="p">[</span><span class="err">达到</span><span class="n">token限制</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">K</span> <span class="o">--&gt;|</span><span class="n">content_filter</span><span class="o">|</span> <span class="n">N</span><span class="p">[</span><span class="err">内容被过滤</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">K</span> <span class="o">--&gt;|</span><span class="n">stop</span><span class="o">|</span> <span class="n">O</span><span class="p">[</span><span class="err">正常完成</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="n">L</span> <span class="o">--&gt;</span> <span class="n">P</span><span class="p">[</span><span class="err">添加工具结果到消息中</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">P</span> <span class="o">--&gt;</span> <span class="n">Q</span><span class="p">{</span><span class="err">达到最大迭代?</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">M</span> <span class="o">--&gt;</span> <span class="n">R</span><span class="p">[</span><span class="err">结束循环</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">N</span> <span class="o">--&gt;</span> <span class="n">R</span>
-</span></span><span class="line"><span class="cl">    <span class="n">O</span> <span class="o">--&gt;</span> <span class="n">R</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="n">Q</span> <span class="o">--&gt;|</span><span class="err">否</span><span class="o">|</span> <span class="n">G</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Q</span> <span class="o">--&gt;|</span><span class="err">是</span><span class="o">|</span> <span class="n">R</span>
-</span></span><span class="line"><span class="cl">    <span class="n">R</span> <span class="o">--&gt;</span> <span class="n">S</span><span class="p">[</span><span class="err">返回响应</span><span class="p">]</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h4 id="自定义-prompt">自定义 Prompt</h4>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-474c4" hidden>
+    <label for="zoomCheck-474c4">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/mcp-agent.png"/> 
+    
+    
+    </label>
+</figure>
+
+<h4 id="自定义-prompt">自定义 Prompt</h4>
 <p>使用自定义的 prompt: 可以通过api: /api/v1/bots/{bot_id} 进行修改， system_prompt_template, query_prompt_template。</p>
 <h4 id="websearch">WebSearch</h4>
 <h5 id="web_read">web_read</h5>
@@ -1523,51 +1247,21 @@
 <p>合并 low-level 和 high-level 的结果，去重（针对实体、边和文本单元），返回合并后的结果（包括实体、边和文本单元的统一列表），以供LLM生成答案使用。</p>
 </li>
 </ol>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">flowchart LR
-</span></span><span class="line"><span class="cl">  A[查询内容] --&gt; C[LLM 提取关键词]
-</span></span><span class="line"><span class="cl">  C --&gt; LL[Low-Level keywords]
-</span></span><span class="line"><span class="cl">  C --&gt; HL[High-Level keywords]
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">  %% 混合检索（Hybrid Search）
-</span></span><span class="line"><span class="cl">  LL --&gt;|Hybrid Search| DB
-</span></span><span class="line"><span class="cl">  HL --&gt;|Hybrid Search| DB
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">  %% 子图：包含图库和向量库
-</span></span><span class="line"><span class="cl">  subgraph DB[DB]
-</span></span><span class="line"><span class="cl">    direction TB
-</span></span><span class="line"><span class="cl">    DB1[图库]
-</span></span><span class="line"><span class="cl">    DB2[向量库]
-</span></span><span class="line"><span class="cl">  end
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">  %% 数据聚合与后续处理
-</span></span><span class="line"><span class="cl">  DB1 --&gt; S[相关总结的文档]
-</span></span><span class="line"><span class="cl">  DB2 --&gt; S
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h4 id="全文检索">全文检索</h4>
+
+<figure>
+    
+    
+    <input type="checkbox" id="zoomCheck-ac9e3" hidden>
+    <label for="zoomCheck-ac9e3">
+    
+    
+    <img class="zoomCheck" loading="lazy" src="/ox-hugo/graphrag_search.png"/> 
+    
+    
+    </label>
+</figure>
+
+<h4 id="全文检索">全文检索</h4>
 <p>Default topK: 15 = 5 * 3.</p>
 <p>首先利用 default: IKKeywordExtractor (可配置 LLM keyword Extractor) 提取 query 的关键词，然后利用关键词在 ES 中检索相关的文档返回。</p>
 <h4 id="摘要检索">摘要检索</h4>
