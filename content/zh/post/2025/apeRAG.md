@@ -198,39 +198,8 @@ class Part(BaseModel):
 
 #### 索引创建流程
 
-```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant API as API Server
-    participant IM as Index Manager
-    participant DB as PostgreSQL
-    participant R as Reconciler
-    participant W as Celery Worker
-    participant S as 存储层
-    
-    U->>API: 上传文档
-    API->>IM: create_indexes()
-    IM->>DB: 写入 DocumentIndex<br/>status=PENDING, version=1
-    IM-->>API: 返回成功
-    API-->>U: 上传成功
-    
-    Note over R: 每 30 秒执行一次
-    R->>DB: 查询 PENDING 状态索引
-    DB-->>R: 返回待处理列表
-    R->>W: 调度 create_document_indexes_workflow
-    
-    W->>W: parse_document_task<br/>解析文档内容
-    W->>W: trigger_create_indexes_workflow<br/>动态扇出
-    
-    par 并行索引创建
-        W->>S: create_index(VECTOR)<br/>生成 embedding
-        W->>S: create_index(FULLTEXT)<br/>建立全文索引
-        W->>S: create_index(GRAPH)<br/>构建知识图谱
-    end
-    
-    W->>DB: 更新 status=ACTIVE<br/>observed_version=1
-    W-->>R: 任务完成
-```
+{{< figure src="/ox-hugo/create_index.png" >}}
+
 
 ##### 向量索引构建
 
@@ -376,85 +345,8 @@ Output:
 
 - 通过 openapi: /api/v1/collections/{collection_id}/graphs/merge-suggestions/{suggestion_id}/action 进行merge 相同的实体。
 
-```mermaid
-flowchart TD
-    %% 定义样式类
-    classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000,font-weight:bold
-    classDef manager fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
-    classDef processing fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
-    classDef intelligence fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    classDef optimization fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
-    classDef storage fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
-    classDef complete fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#000,font-weight:bold
-    
-    %% 入口层
-    START["🚀 Graph Index 任务启动"]
-    
-    %% 管理层
-    MANAGER["🎯 LightRAG 实例管理<br/>• create_lightrag_instance<br/>• workspace 隔离"]
-    
-    %% 文档处理分支
-    DOC_PROCESS["📄 文档分块处理<br/>• ainsert_and_chunk_document<br/>• chunking_by_token_size"]
-    DOC_STORE["💾 分块数据存储<br/>• chunks_vdb.upsert<br/>• text_chunks.upsert"]
-    
-    %% 图索引处理分支
-    GRAPH_START["🏛️ 图索引构建启动<br/>• aprocess_graph_indexing"]
-    
-    %% 智能提取层
-    AI_EXTRACT["🔬 AI 智能提取<br/>• extract_entities<br/>• LLM 并发调用"]
-    ENTITY_REL["🎭 实体关系识别<br/>• Entity Recognition<br/>• Relationship Extraction"]
-    
-    %% 拓扑优化层
-    TOPO_ANALYSIS["🧠 拓扑分析<br/>• _find_connected_components<br/>• BFS算法"]
-    COMPONENT_GROUP["🌐 连通分量分组<br/>• Component Grouping<br/>• 并发任务分配"]
-    
-    %% 并发合并层
-    CONCURRENT_MERGE["⚡ 并发智能合并<br/>• merge_nodes_and_edges<br/>• 细粒度锁控制"]
-    
-    %% 存储层（并行写入）
-    STORAGE_GRAPH["🗄️ 图数据库<br/>Neo4j/NebulaGraph/PG"]
-    STORAGE_VECTOR["🎯 向量数据库<br/>Qdrant/Elasticsearch"]
-    STORAGE_TEXT["📝 文本存储<br/>原始分块数据"]
-    
-    %% 完成
-    COMPLETE["✅ 知识图谱构建完成<br/>🎉 多维度检索就绪"]
-    
-    %% 主流程连接
-    START --> MANAGER
-    MANAGER --> DOC_PROCESS
-    MANAGER --> GRAPH_START
-    
-    DOC_PROCESS --> DOC_STORE
-    DOC_STORE -.->|"数据准备完成"| GRAPH_START
-    
-    GRAPH_START --> AI_EXTRACT
-    AI_EXTRACT --> ENTITY_REL
-    AI_EXTRACT --> TOPO_ANALYSIS
-    
-    ENTITY_REL --> COMPONENT_GROUP
-    TOPO_ANALYSIS --> COMPONENT_GROUP
-    
-    COMPONENT_GROUP --> CONCURRENT_MERGE
-    
-    %% 并行存储
-    CONCURRENT_MERGE --> STORAGE_GRAPH
-    CONCURRENT_MERGE --> STORAGE_VECTOR
-    DOC_STORE --> STORAGE_TEXT
-    
-    %% 汇聚完成
-    STORAGE_GRAPH --> COMPLETE
-    STORAGE_VECTOR --> COMPLETE
-    STORAGE_TEXT --> COMPLETE
-    
-    %% 应用样式
-    class START entry
-    class MANAGER manager
-    class DOC_PROCESS,DOC_STORE processing
-    class GRAPH_START,AI_EXTRACT,ENTITY_REL intelligence
-    class TOPO_ANALYSIS,COMPONENT_GROUP,CONCURRENT_MERGE optimization
-    class STORAGE_GRAPH,STORAGE_VECTOR,STORAGE_TEXT storage
-    class COMPLETE complete
-```
+
+{{< figure src="/ox-hugo/graphrag.png" >}}
 
 ##### 视觉索引构建
 会使用多模态模型，有两条路径，根据模型的能力，会有两条路径.
@@ -613,33 +505,8 @@ APERAG_AGENT_INSTRUCTION_ZH = """
 
 3. MCP server 通过api 检索相关信息，后续经过 query prompt 来处理检索返回的信息。
 
-```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant API as API Server
-    participant Agent as Agent Service
-    participant MCP as MCP Tools
-    participant LLM as LLM Service
-    participant Search as Search Service
-    
-    U->>API: 发送消息
-    API->>Agent: process_message()
-    
-    Agent->>LLM: 调用 LLM（携带工具定义）
-    LLM-->>Agent: 返回工具调用指令
-    
-    Agent->>MCP: 执行工具<br/>search_collection()
-    MCP->>Search: 混合检索
-    Search-->>MCP: 返回检索结果
-    MCP-->>Agent: 返回工具结果
-    
-    Agent->>LLM: 携带检索上下文<br/>再次调用 LLM
-    LLM-->>Agent: 生成最终回答
-    
-    Agent-->>API: 流式返回
-    API-->>U: SSE 流式响应
+{{< figure src="/ox-hugo/mcp.png" >}}
 
-```
 #### 检索中 mcp-agent 的使用
 Agent 系统的基本构建块是一个通过来自 MCP 服务器集合的检索、工具和内存等增强功能提升的 LLM。当前的模型可以主动使用这些能力——生成自己的搜索查询、选择合适的工具并确定要保留的信息。
 
@@ -738,30 +605,7 @@ resp = await async_openai_client.chat.completions.create(**payload)
 
 5. 内部的generate 结果的迭代过程。
 
-```mermaid
-flowchart TD
-    B[设置系统提示] --> C[获取可用工具]
-    C --> E[开始循环<br>max_iterations]
-    
-    E --> G[调用OpenAI API]
-    G --> J[提取响应消息]
-    
-    J --> K{finish_reason}
-    K -->|tool_calls| L[并行执行工具调用]
-    K -->|length| M[达到token限制]
-    K -->|content_filter| N[内容被过滤]
-    K -->|stop| O[正常完成]
-    
-    L --> P[添加工具结果到消息中]
-    P --> Q{达到最大迭代?}
-    M --> R[结束循环]
-    N --> R
-    O --> R
-    
-    Q -->|否| G
-    Q -->|是| R
-    R --> S[返回响应]
-```
+{{< figure src="/ox-hugo/mcp-agent.png" >}}
 
 #### 自定义 Prompt
 
@@ -837,28 +681,8 @@ Output:
 
 3. 合并 low-level 和 high-level 的结果，去重（针对实体、边和文本单元），返回合并后的结果（包括实体、边和文本单元的统一列表），以供LLM生成答案使用。
 
-```mermaid
-flowchart LR
-  A[查询内容] --> C[LLM 提取关键词]
-  C --> LL[Low-Level keywords]
-  C --> HL[High-Level keywords]
+{{< figure src="/ox-hugo/graphrag_search.png" >}}
 
-  %% 混合检索（Hybrid Search）
-  LL -->|Hybrid Search| DB
-  HL -->|Hybrid Search| DB
-
-  %% 子图：包含图库和向量库
-  subgraph DB[DB]
-    direction TB
-    DB1[图库]
-    DB2[向量库]
-  end
-
-  %% 数据聚合与后续处理
-  DB1 --> S[相关总结的文档]
-  DB2 --> S
-
-```
 #### 全文检索
 Default topK: 15 = 5 * 3.
 
